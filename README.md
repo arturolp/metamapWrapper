@@ -21,13 +21,13 @@ This package is in development by Arturo Lopez Pineda, PhD (arturolp @ stanford.
 
 Expected commands format: 
 ```
-java -jar metamapWrapper.jar -inputFile data.txt [-eavFileName output.txt] [-patientColumn 0] [-narrativeColumn 1] [-diseaseColumn 2]
+java -jar metamapWrapper.jar -input data.txt [-output output.txt] [-patient 0] [-narrative 1] [-disease 2]
 ```
 
 |Parameter|Example|Description|
 |-------------|-------------|-------------|
-| -inputFile | data.txt | Is the input file with three columns including patientID, clinical narrative and disease code (for training)|
-| -eavFileName | output.txt | The name of output file in EAV format. Default is the same as input with a modifier "_eav" |
-| -patientColumn | 0 | The column number where the patient ID is located. Default is 0|
-| -narrativeColumn | 1 | The column number where the narrative text is located. Default is 1 |
-| -diseaseColumn | 2 | The column number where the disease or top level code is located (only for training). Default is 2 |
+| -input <inputFile> | data.txt | Is the input file with three columns including patientID, clinical narrative and disease code (for training)|
+| -output <eavFileName> | output.txt | The name of output file in EAV format. Default is the same as input with a modifier "_eav" |
+| -patient <columnNumber> | 0 | The column number where the patient ID is located. Default is 0|
+| -narrative <columnNumber> | 1 | The column number where the narrative text is located. Default is 1 |
+| -disease  | 2 | The column number where the disease or top level code is located (only for training). Default is 2 |
