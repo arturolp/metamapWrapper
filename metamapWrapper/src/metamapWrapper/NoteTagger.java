@@ -1,6 +1,9 @@
 package metamapWrapper;
 
 /*
+ * 
+ * Project: Clinical Note Tagger
+ * 
  * author: Arturo Lopez Pineda
  * 
  * Mar 7, 2018
@@ -19,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+
 import au.com.bytecode.opencsv.CSVReader;
 import bioc.BioCDocument;
 import gov.nih.nlm.nls.metamap.document.FreeText;
@@ -27,68 +31,76 @@ import gov.nih.nlm.nls.metamap.lite.types.Ev;
 import gov.nih.nlm.nls.ner.MetaMapLite;
 
 public class NoteTagger {
+	
+	
+		
+	public NoteTagger() {
+		
+	}
 
-
-	public static void main(String[] args) throws InvocationTargetException, Exception {
-		String inputFile = "/Users/arturolp/Documents/Stanford/CNT-MetaMap/data/mimic_train.csv";
-		String eavFile = "/Users/arturolp/Documents/Stanford/CNT-MetaMap/data/mimic_train_eav.csv";
-
+	public void callMetaMap(String inputFile, String eavFile, int patientIDcolumn, int clinicalNarrativeColumn) {
 		// Get all tokens at once
-		//List<String[]> tokens = getTokens(csvFile);
-		//System.out.println(tokens.get(0)[1]);
+				//List<String[]> tokens = getTokens(csvFile);
+				//System.out.println(tokens.get(0)[1]);
 
-		BufferedWriter bw = null;
-		FileWriter fw = null;
+				BufferedWriter bw = null;
+				FileWriter fw = null;
 
-		// Try to append file
-		try {
+				// Try to append file
+				try {
 
 
-			fw = new FileWriter(eavFile);
-			bw = new BufferedWriter(fw);
-			bw.write("");
+					fw = new FileWriter(eavFile);
+					bw = new BufferedWriter(fw);
+					bw.write("");
 
-			// Try to read file
-			try (CSVReader reader = new CSVReader(new BufferedReader(new FileReader(inputFile)))) {
+					// Try to read file
+					try (CSVReader reader = new CSVReader(new BufferedReader(new FileReader(inputFile)))) {
 
-				String tokens[];
+						String tokens[];
 
-				while ((tokens = reader.readNext()) != null) {
-					String umls = getUMLScodes(tokens[2], tokens[6]);
-					
-					//Add patient CUIs
-					bw.append(umls);
+						while ((tokens = reader.readNext()) != null) {
+							String umls = getUMLScodes(tokens[patientIDcolumn], tokens[patientIDcolumn]);
+							
+							//Add patient CUIs
+							bw.append(umls);
 
-					System.out.print(umls);
+							System.out.print(umls);
+
+						}
+					} catch(IOException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}	catch (IOException e) {
+
+					e.printStackTrace();
+
+				} finally {
+
+					try {
+
+						if (bw != null)
+							bw.close();
+
+						if (fw != null)
+							fw.close();
+
+					} catch (IOException ex) {
+
+						ex.printStackTrace();
+
+					}
 
 				}
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
-		}	catch (IOException e) {
-
-			e.printStackTrace();
-
-		} finally {
-
-			try {
-
-				if (bw != null)
-					bw.close();
-
-				if (fw != null)
-					fw.close();
-
-			} catch (IOException ex) {
-
-				ex.printStackTrace();
-
-			}
-
-		}
-
-
-
 	}
 
 	public static List<String[]> getTokens(String csvFile){
