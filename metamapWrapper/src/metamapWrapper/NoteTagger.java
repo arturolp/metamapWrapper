@@ -38,7 +38,7 @@ public class NoteTagger {
 		
 	}
 
-	public void callMetaMap(String inputFile, String eavFile, int patientIDcolumn, int clinicalNarrativeColumn) {
+	public void callMetaMap(String inputFile, String eavFile, int patientIDcolumn, int clinicalNarrativeColumn, int diseaseTargetColumn) {
 		// Get all tokens at once
 				//List<String[]> tokens = getTokens(csvFile);
 				//System.out.println(tokens.get(0)[1]);
