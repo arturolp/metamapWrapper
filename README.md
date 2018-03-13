@@ -10,7 +10,7 @@ Medical trajectories of the cohort: Each patient is represented by a rectangle, 
 ## Citation
 For citation and more information refer to:
 
->A.M. Zehnder et al. "Automatic tagging of clinical narratives to top-level categories of diseases facilitates cohort identification" (under development).
+>A.M. Zehnder et al. "Automatic tagging of clinical narratives to top-level categories of diseases facilitates cross-species cohort identification" (under development).
 
 
 ## Current development status
