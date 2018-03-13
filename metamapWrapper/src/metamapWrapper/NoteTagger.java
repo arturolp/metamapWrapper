@@ -31,79 +31,103 @@ import gov.nih.nlm.nls.metamap.lite.types.Ev;
 import gov.nih.nlm.nls.ner.MetaMapLite;
 
 public class NoteTagger {
-	
-	
-		
+
+
+
 	public NoteTagger() {
-		
+
 	}
 
-	public void callMetaMap(String inputFile, String eavFile, int patientIDcolumn, int clinicalNarrativeColumn, int diseaseTargetColumn) {
+	public void callMetaMap(String inputFile, String eavFile, int patientIDcolumn, int clinicalNarrativeColumn, int diseaseTargetColumn,
+			String targetName, String splitMarker) {
 		// Get all tokens at once
-				//List<String[]> tokens = getTokens(csvFile);
-				//System.out.println(tokens.get(0)[1]);
+		//List<String[]> tokens = getTokens(csvFile);
+		//System.out.println(tokens.get(0)[1]);
 
-				BufferedWriter bw = null;
-				FileWriter fw = null;
+		BufferedWriter bw = null;
+		FileWriter fw = null;
 
-				// Try to append file
-				try {
+		// Try to append file
+		try {
 
+			fw = new FileWriter(eavFile);
+			bw = new BufferedWriter(fw);
+			bw.write("");
 
-					fw = new FileWriter(eavFile);
-					bw = new BufferedWriter(fw);
-					bw.write("");
+			// Try to read file
+			try (CSVReader reader = new CSVReader(new BufferedReader(new FileReader(inputFile)))) {
 
-					// Try to read file
-					try (CSVReader reader = new CSVReader(new BufferedReader(new FileReader(inputFile)))) {
+				String tokens[];
 
-						String tokens[];
+				while ((tokens = reader.readNext()) != null) {
+					String umls = getUMLScodes(tokens[patientIDcolumn], tokens[clinicalNarrativeColumn]);
 
-						while ((tokens = reader.readNext()) != null) {
-							String umls = getUMLScodes(tokens[patientIDcolumn], tokens[patientIDcolumn]);
-							
-							//Add patient CUIs
-							bw.append(umls);
+					//Add patient CUIs
+					bw.append(umls);
+					
+					//Add top-level category
+					String category = getCategory(tokens[patientIDcolumn], targetName, tokens[diseaseTargetColumn], splitMarker);
+					bw.append(category);
 
-							System.out.print(umls);
-
-						}
-					} catch(IOException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}	catch (IOException e) {
-
-					e.printStackTrace();
-
-				} finally {
-
-					try {
-
-						if (bw != null)
-							bw.close();
-
-						if (fw != null)
-							fw.close();
-
-					} catch (IOException ex) {
-
-						ex.printStackTrace();
-
-					}
+					System.out.print(umls);
 
 				}
+			} catch(IOException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}	catch (IOException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			try {
+
+				if (bw != null)
+					bw.close();
+
+				if (fw != null)
+					fw.close();
+
+			} catch (IOException ex) {
+
+				ex.printStackTrace();
+
+			}
+
+		}
 	}
 
-	public static List<String[]> getTokens(String csvFile){
+	private String getCategory(String patient, String targetName, String disease, String splitMarker) {
+		String category = "";
+		
+		if (disease.contains(splitMarker)) {
+			String[] parts = disease.split(splitMarker);
+			
+			for(int i = 0; i < parts.length; i++) {
+				category = category + patient + "," + targetName + ","+ parts[i] + "\n";
+				System.out.print(category);
+			}
+		}
+		else {
+		category = patient + "," + targetName + ","+ disease + "\n";
+		System.out.print(category);
+		}
+		
+		return category;
+	}
+
+	//GET ALL TOKENS
+	/*private List<String[]> getTokens(String csvFile){
 
 		List<String[]> tokens = new ArrayList<String[]>();
 
@@ -118,10 +142,10 @@ public class NoteTagger {
 
 		return(tokens);
 
-	}
+	}*/
 
 
-	public static String getUMLScodes(String patient, String narrative) throws IllegalAccessException, InvocationTargetException, IOException, Exception {
+	private String getUMLScodes(String patient, String narrative) throws IllegalAccessException, InvocationTargetException, IOException, Exception {
 
 		String umls = "";
 
@@ -164,7 +188,7 @@ public class NoteTagger {
 
 
 
-		//Provided by Ashley
+		//Provided by Ashley Zehnder, DVM, PhD 
 		List<String> semanticTypes = Arrays.asList("blor", "bpoc", "bsoj", "chem", "clnd", "diap", "dsyn", "fndg", "lbpr", "lbtr", "medd", 
 				"neop",	"orgm", "comd", "fngs", "bact", "sbst", "sosy", "tisu", "topp", "virs", "vita");
 

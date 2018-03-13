@@ -100,6 +100,8 @@ public class WrapperApp {
 		int patientCol = 0;
 		int narrativeCol = 1; 
 		int diseaseCol = 2;
+		String targetName = "class";
+		String splitMarker = "-";
 		
 		// Parsing the command line arguments
 				CommandLineParser parser = new DefaultParser();
@@ -170,7 +172,7 @@ public class WrapperApp {
 				            	//-------------------------------
 				            	System.out.println("\nRunning MetaMap...");
 				            	NoteTagger nt = new NoteTagger();
-				        		nt.callMetaMap(inputFile, outputFile, patientCol, narrativeCol, diseaseCol);
+				        		nt.callMetaMap(inputFile, outputFile, patientCol, narrativeCol, diseaseCol,targetName, splitMarker);
 				            	
 				        }
 						
