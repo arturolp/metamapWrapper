@@ -58,9 +58,11 @@ public class NoteTagger {
 			try (CSVReader reader = new CSVReader(new BufferedReader(new FileReader(inputFile)))) {
 
 				String tokens[];
+				String umls = "Entity,Attribute,Description,SemanticType,Value\n";
+				bw.append(umls);
 
 				while ((tokens = reader.readNext()) != null) {
-					String umls = getUMLScodes(tokens[patientIDcolumn], tokens[clinicalNarrativeColumn]);
+					umls = getUMLScodes(tokens[patientIDcolumn], tokens[clinicalNarrativeColumn]);
 
 					//Add patient CUIs
 					bw.append(umls);
@@ -114,12 +116,12 @@ public class NoteTagger {
 			String[] parts = disease.split(splitMarker);
 			
 			for(int i = 0; i < parts.length; i++) {
-				category = category + patient + "," + targetName + ","+ parts[i] + "\n";
+				category = category + patient + "," + targetName + i + ",,,"+ parts[i] + "\n";
 				System.out.print(category);
 			}
 		}
 		else {
-		category = patient + "," + targetName + ","+ disease + "\n";
+		category = patient + "," + targetName + ",,,"+ disease + "\n";
 		System.out.print(category);
 		}
 		
@@ -187,7 +189,6 @@ public class NoteTagger {
 		documentList.add(document);
 
 
-
 		//Provided by Ashley Zehnder, DVM, PhD 
 		List<String> semanticTypes = Arrays.asList("blor", "bpoc", "bsoj", "chem", "clnd", "diap", "dsyn", "fndg", "lbpr", "lbtr", "medd", 
 				"neop",	"orgm", "comd", "fngs", "bact", "sbst", "sosy", "tisu", "topp", "virs", "vita");
@@ -201,7 +202,7 @@ public class NoteTagger {
 					//System.out.print(ev.getConceptInfo().getCUI() + "|" + entity.getMatchedText() + "|" + ev.getConceptInfo().getSemanticTypeSet());
 					//System.out.println();
 					//umls = umls + patient + "|" + ev.getConceptInfo().getCUI() + "|" + entity.getMatchedText() + "|" + ev.getConceptInfo().getSemanticTypeSet() +"\n";
-					umls = umls + patient + "," + ev.getConceptInfo().getCUI() + ",T\n";
+					umls = umls + patient + "," + ev.getConceptInfo().getCUI() + ","+ ev.getConceptInfo().getConceptString() + "," + ev.getConceptInfo().getSemanticTypeSet() +",T\n";
 				}
 			}
 		}
