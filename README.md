@@ -33,10 +33,10 @@ java -jar metamapWrapper.jar -input data.txt [-output output.txt] [-patient 0] [
 | -disease | *\<columnNumber>* | 2 | The column number where the disease or top level code is located (only for training). Default is 2 |
 
 ## MetaMap considerations
-Metamap is only looking for the following semantic type CUIs: 
+metamapWrapper is only looking for the following semantic type CUIs: 
 ```
 blor, bpoc, bsoj, chem, clnd, diap, dsyn, fndg, lbpr, lbtr, medd, neop,	orgm, comd, fngs, bact, sbst, sosy, tisu, topp, virs, vita
 ```
 
-For a full list of semantic types, please refer to:
+For a full list of semantic types and descriptions, please refer to:
 https://metamap.nlm.nih.gov/Docs/SemanticTypes_2013AA.txt
