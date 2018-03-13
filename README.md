@@ -27,7 +27,7 @@ java -jar metamapWrapper.jar -input data.txt [-output output.txt] [-patient 0] [
 |Parameter|Argument|Example|Description|
 |-------------|-------------|-------------|-------------|
 | -input | *\<inputFile>* | data.txt | Is the input file with three columns including patientID, clinical narrative and disease code (for training)|
-| -metamap | *\<folderPath>* | metamap/ | The path to the folder where MetaMap is located. Default is the same path as input under data/ |
+| -metamap | *\<folderPath>* | metamap/ | The path to the folder where MetaMap is located. Default is the same path as input under metamap/ |
 | -output | *\<eavFileName>* | output.txt | The name of output file in EAV format. Default is the same as input with a modifier "_eav" |
 | -patient | *\<columnNumber>* | 0 | The column number where the patient ID is located. Default is 0|
 | -narrative | *\<columnNumber>* | 1 | The column number where the narrative text is located. Default is 1 |
