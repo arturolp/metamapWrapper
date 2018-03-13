@@ -31,3 +31,12 @@ java -jar metamapWrapper.jar -input data.txt [-output output.txt] [-patient 0] [
 | -patient | *\<columnNumber>* | 0 | The column number where the patient ID is located. Default is 0|
 | -narrative | *\<columnNumber>* | 1 | The column number where the narrative text is located. Default is 1 |
 | -disease | *\<columnNumber>* | 2 | The column number where the disease or top level code is located (only for training). Default is 2 |
+
+## MetaMap considerations
+Metamap is only looking for the following semantic type CUIs: 
+```
+blor, bpoc, bsoj, chem, clnd, diap, dsyn, fndg, lbpr, lbtr, medd, neop,	orgm, comd, fngs, bact, sbst, sosy, tisu, topp, virs, vita
+```
+
+For a full list of semantic types, please refer to:
+https://metamap.nlm.nih.gov/Docs/SemanticTypes_2013AA.txt
