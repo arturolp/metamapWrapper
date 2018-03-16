@@ -50,11 +50,13 @@ public class WrapperApp {
 		Option metamapData = Option.builder("metamapData")
 				.argName("folderPath")
 				.hasArg()
+				.required(true)
 				.desc("The path to the folder where MetaMap DATA is located. Default is the same path as input under metamap/")
 				.build();
 		Option metamapConfig = Option.builder("metamapConfig")
 				.argName("folderPath")
 				.hasArg()
+				.required(true)
 				.desc("The path to the folder where MetaMap CONFIG is located. Default is the same path as input under metamap/")
 				.build();
 		Option output = Option.builder("output")
