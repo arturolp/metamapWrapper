@@ -47,16 +47,14 @@ public class WrapperApp {
 				.required(true)
 				.desc("Is the input file with three columns including patientID, clinical narrative and disease code (for training)")
 				.build();
-		Option metamapData = Option.builder("metamapData")
+		Option metamapData = Option.builder("mmData")
 				.argName("folderPath")
 				.hasArg()
-				.required(true)
 				.desc("The path to the folder where MetaMap DATA is located. Default is the same path as input under metamap/")
 				.build();
-		Option metamapConfig = Option.builder("metamapConfig")
+		Option metamapConfig = Option.builder("mmConfig")
 				.argName("folderPath")
 				.hasArg()
-				.required(true)
 				.desc("The path to the folder where MetaMap CONFIG is located. Default is the same path as input under metamap/")
 				.build();
 		Option output = Option.builder("output")
@@ -150,8 +148,8 @@ public class WrapperApp {
 				            	
 				            	
 				            	//Read metamap DATA path
-				            	if (line.hasOption("metamapData")) {
-				            		metamapData = line.getOptionValue("metamapData");   	
+				            	if (line.hasOption("mmData")) {
+				            		metamapData = line.getOptionValue("mmData");   	
 				            	}
 				            	else {
 				            		File file = new File(inputFile);
@@ -162,8 +160,8 @@ public class WrapperApp {
 				            	
 				            	
 				            	//Read metamap CONFIG path
-				            	if (line.hasOption("metamapConfig")) {
-				            		metamapConfig = line.getOptionValue("metamapConfig");
+				            	if (line.hasOption("mmConfig")) {
+				            		metamapConfig = line.getOptionValue("mmConfig");
 				            	}
 				            	else {
 				            		File file = new File(inputFile);
