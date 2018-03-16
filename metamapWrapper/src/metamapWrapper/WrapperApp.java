@@ -47,28 +47,34 @@ public class WrapperApp {
 				.required(true)
 				.desc("Is the input file with three columns including patientID, clinical narrative and disease code (for training)")
 				.build();
+		Option metamapData = Option.builder("metamapData")
+				.argName("folderPath")
+				.hasArg()
+				.desc("The path to the folder where MetaMap DATA is located. Default is the same path as input under metamap/")
+				.build();
+		Option metamapConfig = Option.builder("metamapConfig")
+				.argName("folderPath")
+				.hasArg()
+				.desc("The path to the folder where MetaMap CONFIG is located. Default is the same path as input under metamap/")
+				.build();
 		Option output = Option.builder("output")
 				.argName("eavFileName")
-				.valueSeparator(' ')
-				.numberOfArgs(2)
+				.hasArg()
 				.desc("The name of output file in EAV format. Default is the same as input with a modifier \"_eav\"")
 				.build();
 		Option patientCol = Option.builder("patient")
 				.argName("columnNumber")
-				.valueSeparator(' ')
-				.numberOfArgs(2)
+				.hasArg()
 				.desc("The column number where the patient ID is located. Default is 0")
 				.build();
 		Option narrativeCol = Option.builder("narrative")
 				.argName("columnNumber")
-				.valueSeparator(' ')
-				.numberOfArgs(2)
+				.hasArg()
 				.desc("The column number where the narrative text is located. Default is 1")
 				.build();
 		Option diseaseCol = Option.builder("disease")
 				.argName("columnNumber")
-				.valueSeparator(' ')
-				.numberOfArgs(2)
+				.hasArg()
 				.desc("The column number where the disease or top level code is located (only for training). Default is 2")
 				.build();
 
@@ -78,6 +84,8 @@ public class WrapperApp {
 
 		//add custom options
 		options.addOption(input);
+		options.addOption(metamapData);
+		options.addOption(metamapConfig);
 		options.addOption(output);
 		options.addOption(patientCol);
 		options.addOption(narrativeCol);
@@ -96,6 +104,10 @@ public class WrapperApp {
 		
 		//Default values
 		String inputFile = "";
+		String metamapData = "";
+		String metamapConfig = "";
+		/*String[] semanticTypes = {"blor", "bpoc", "bsoj", "chem", "clnd", "diap", "dsyn", "fndg", "lbpr", "lbtr", "medd", 
+				"neop",	"orgm", "comd", "fngs", "bact", "sbst", "sosy", "tisu", "topp", "virs", "vita"};*/
 		String outputFile = "";
 		int patientCol = 0;
 		int narrativeCol = 1; 
@@ -134,6 +146,30 @@ public class WrapperApp {
 				            	inputFile = line.getOptionValue("input");
 				            	System.out.println("Reading input file: " + inputFile);
 				            	
+				            	
+				            	//Read metamap DATA path
+				            	if (line.hasOption("metamapData")) {
+				            		metamapData = line.getOptionValue("metamapData");   	
+				            	}
+				            	else {
+				            		File file = new File(inputFile);
+				            		String path = FilenameUtils.getFullPath(file.getPath());
+				            		metamapData = path + "data/";
+				            	}
+				            	System.out.println("Metamap data folder: " + metamapData);
+				            	
+				            	
+				            	//Read metamap CONFIG path
+				            	if (line.hasOption("metamapConfig")) {
+				            		metamapConfig = line.getOptionValue("metamapConfig");
+				            	}
+				            	else {
+				            		File file = new File(inputFile);
+				            		String path = FilenameUtils.getFullPath(file.getPath());
+				            		metamapConfig = path + "config/";
+				            	}
+				            	System.out.println("Metamap config folder: " + metamapConfig);
+				            	
 				            	//Read output filename
 				            	if (line.hasOption("output")) {
 				            		outputFile = line.getOptionValue("output");   	
@@ -146,7 +182,7 @@ public class WrapperApp {
 				            		String extension = FilenameUtils.getExtension(filename);
 				            		outputFile = path + base + "_eav" + "." + extension;
 				            	}
-				            	System.out.println("Reading input file: " + outputFile);
+				            	System.out.println("Output file to write: " + outputFile);
 				            	
 				            	
 				            	//Read patientCol
@@ -172,7 +208,7 @@ public class WrapperApp {
 				            	//-------------------------------
 				            	System.out.println("\nRunning MetaMap...");
 				            	NoteTagger nt = new NoteTagger();
-				        		nt.callMetaMap(inputFile, outputFile, patientCol, narrativeCol, diseaseCol,targetName, splitMarker);
+				        		nt.callMetaMap(inputFile, metamapData, metamapConfig, outputFile, patientCol, narrativeCol, diseaseCol,targetName, splitMarker);
 				            	
 				        }
 						

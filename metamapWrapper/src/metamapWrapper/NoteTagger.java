@@ -38,7 +38,8 @@ public class NoteTagger {
 
 	}
 
-	public void callMetaMap(String inputFile, String eavFile, int patientIDcolumn, int clinicalNarrativeColumn, int diseaseTargetColumn,
+	public void callMetaMap(String inputFile, String metamapData, String metamapConfig,
+			String eavFile, int patientIDcolumn, int clinicalNarrativeColumn, int diseaseTargetColumn,
 			String targetName, String splitMarker) {
 		// Get all tokens at once
 		//List<String[]> tokens = getTokens(csvFile);
@@ -62,7 +63,7 @@ public class NoteTagger {
 				bw.append(umls);
 
 				while ((tokens = reader.readNext()) != null) {
-					umls = getUMLScodes(tokens[patientIDcolumn], tokens[clinicalNarrativeColumn]);
+					umls = getUMLScodes(metamapData, metamapConfig, tokens[patientIDcolumn], tokens[clinicalNarrativeColumn]);
 
 					//Add patient CUIs
 					bw.append(umls);
@@ -147,20 +148,24 @@ public class NoteTagger {
 	}*/
 
 
-	private String getUMLScodes(String patient, String narrative) throws IllegalAccessException, InvocationTargetException, IOException, Exception {
+	private String getUMLScodes(String metamapData, String metamapConfig, String patient, String narrative) throws IllegalAccessException, InvocationTargetException, IOException, Exception {
 
 		String umls = "";
 
 		// Creating Properties for MetaMapLite
 		Properties myProperties = new Properties();
-		MetaMapLite.expandModelsDir(myProperties, "data/models");
-		MetaMapLite.expandIndexDir(myProperties, "data/ivf/strict");
-		myProperties.setProperty("metamaplite.excluded.termsfile", "data/specialterms.txt");
-
+		String models = metamapData + "models/";
+		String strict = metamapData + "ivf/2017AA/Base/strict/";
+		String specialterms = metamapData + "specialterms.txt";
+				
+		MetaMapLite.expandModelsDir(myProperties, models);
+		MetaMapLite.expandIndexDir(myProperties, strict);
+		myProperties.setProperty("metamaplite.excluded.termsfile", specialterms);
 
 		// Load properties file in the config folder
 		try {
-			myProperties.load(new FileReader("config/metamaplite.properties"));
+			String properties = metamapConfig + "metamaplite.properties";
+			myProperties.load(new FileReader(properties));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -189,21 +194,20 @@ public class NoteTagger {
 		documentList.add(document);
 
 
-		//Provided by Ashley Zehnder, DVM, PhD 
-		List<String> semanticTypes = Arrays.asList("blor", "bpoc", "bsoj", "chem", "clnd", "diap", "dsyn", "fndg", "lbpr", "lbtr", "medd", 
-				"neop",	"orgm", "comd", "fngs", "bact", "sbst", "sosy", "tisu", "topp", "virs", "vita");
+		//Get the user-provided semantic types
+		//List<String> semanticTypesList = Arrays.asList(semanticTypes);
 
 		//Extract the codes
 		List<Entity> entityList = myMM.processDocumentList(documentList);
 		for (Entity entity: entityList) {
 			for (Ev ev: entity.getEvSet()) {
 
-				if(semanticTypes.contains(ev.getConceptInfo().getSemanticTypeSet().toString().replace("[", "").replace("]", ""))) {
+				//if(semanticTypesList.contains(ev.getConceptInfo().getSemanticTypeSet().toString().replace("[", "").replace("]", ""))) {
 					//System.out.print(ev.getConceptInfo().getCUI() + "|" + entity.getMatchedText() + "|" + ev.getConceptInfo().getSemanticTypeSet());
 					//System.out.println();
 					//umls = umls + patient + "|" + ev.getConceptInfo().getCUI() + "|" + entity.getMatchedText() + "|" + ev.getConceptInfo().getSemanticTypeSet() +"\n";
 					umls = umls + patient + "," + ev.getConceptInfo().getCUI() + ","+ ev.getConceptInfo().getConceptString() + "," + ev.getConceptInfo().getSemanticTypeSet() +",T\n";
-				}
+				//}
 			}
 		}
 
