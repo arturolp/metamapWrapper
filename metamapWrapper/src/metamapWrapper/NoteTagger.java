@@ -18,7 +18,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -61,7 +60,11 @@ public class NoteTagger {
 				String tokens[];
 				String umls = "Entity,Attribute,Description,SemanticType,Value\n";
 				bw.append(umls);
+				
 
+				int lineCounter = 0;
+				int totalLines = 0;
+				
 				while ((tokens = reader.readNext()) != null) {
 					umls = getUMLScodes(metamapData, metamapConfig, tokens[patientIDcolumn], tokens[clinicalNarrativeColumn]);
 
@@ -72,25 +75,31 @@ public class NoteTagger {
 					String category = getCategory(tokens[patientIDcolumn], targetName, tokens[diseaseTargetColumn], splitMarker);
 					bw.append(category);
 
-					System.out.print(umls);
+					//System.out.print(umls);
+					System.out.print(".");
+					lineCounter++;
+					totalLines++;
+					if(lineCounter > 15) {
+						System.out.println(" ["+totalLines+"]");
+						lineCounter = 0;
+					}
 
 				}
+				System.out.println(" ["+totalLines+"]");
+				
+				System.out.println("\n[DONE]");
 			} catch(IOException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}	catch (IOException e) {
 
 			e.printStackTrace();
-
 		} finally {
 
 			try {
@@ -118,12 +127,12 @@ public class NoteTagger {
 			
 			for(int i = 0; i < parts.length; i++) {
 				category = category + patient + "," + targetName + i + ",,,"+ parts[i] + "\n";
-				System.out.print(category);
+				//System.out.print(category);
 			}
 		}
 		else {
 		category = patient + "," + targetName + ",,,"+ disease + "\n";
-		System.out.print(category);
+		//System.out.print(category);
 		}
 		
 		return category;

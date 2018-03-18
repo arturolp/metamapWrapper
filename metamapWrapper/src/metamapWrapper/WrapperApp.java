@@ -135,9 +135,8 @@ public class WrapperApp {
 			            System.out.println("\tApache Commons IO version: " + IOVersion);
 			            System.out.println("\tOpenCSV version: " + OpenCSVVersion);
 			            System.out.println("\nGet current version at: \n\thttps://github.com/bustamante-lab/metamapWrapper");
-			        } else {
-						
-						if (line.hasOption("input")) {
+			        } 
+					else if (line.hasOption("input")) {
 							System.out.println("=====================================");
 				            System.out.println("Running MetaMap Wrapper");
 				            System.out.println("=====================================\n");
@@ -211,12 +210,21 @@ public class WrapperApp {
 				        		nt.callMetaMap(inputFile, metamapData, metamapConfig, outputFile, patientCol, narrativeCol, diseaseCol,targetName, splitMarker);
 				            	
 				        }
-						
+					else {
+						//Print help
+						HelpFormatter formatter = new HelpFormatter();
+			            formatter.printHelp("\nHELP:", options, true);
 					}
+						
+					
 					
 					
 				} catch (ParseException exp) {
 					System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
+					
+					//Print help
+					HelpFormatter formatter = new HelpFormatter();
+		            formatter.printHelp("\nHELP:", options, true);
 				}
 
 		
