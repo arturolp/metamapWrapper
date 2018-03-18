@@ -27,18 +27,19 @@ java -jar metamapWrapper.jar -input data.txt -mmData data/ -mmConfig config/ [-o
 |Parameter|Argument|Example|Description|
 |-------------|-------------|-------------|-------------|
 | -input | *\<inputFile>* | data.txt | Is the input file with three columns including patientID, clinical narrative and disease code (for training)|
-| -mmData | *\<folderPath>* | data/ | The path to the folder where MetaMap DATA is located. Default is the same path as input under config/ |
-| -mmConfig | *\<folderPath>* | config/ | The path to the folder where MetaMap CONFIG is located. Default is the same path as input under data/ |
+| -mmData | *\<folderPath>* | data/ | The path to the folder where MetaMap DATA is located. Default is the same path as input under data/ |
+| -mmConfig | *\<folderPath>* | config/ | The path to the folder where MetaMap CONFIG is located. Default is the same path as input under config/ |
 | -output | *\<eavFileName>* | output.txt | The name of output file in EAV format. Default is the same as input with a modifier "_eav" |
 | -patient | *\<columnNumber>* | 0 | The column number where the patient ID is located. Default is 0|
 | -narrative | *\<columnNumber>* | 1 | The column number where the narrative text is located. Default is 1 |
 | -disease | *\<columnNumber>* | 2 | The column number where the disease or top level code is located (only for training). Default is 2 |
 
 ## MetaMap considerations
-metamapWrapper is only looking for the following semantic type CUIs: 
+metamapWrapper is only looking for the selected semantic types specified in the file: config/metamaplite.properties: 
 ```
-blor, bpoc, bsoj, chem, clnd, diap, dsyn, fndg, lbpr, lbtr, medd, neop,	orgm, comd, fngs, bact, sbst, sosy, tisu, topp, virs, vita
+metamaplite.semanticgroup: blor, bpoc, bsoj, chem, clnd, diap, dsyn, fndg, lbpr, lbtr, medd, neop,	orgm, comd, fngs, bact, sbst, sosy, tisu, topp, virs, vita
 ```
+
 
 For a full list of semantic types and descriptions, please refer to:
 https://metamap.nlm.nih.gov/Docs/SemanticTypes_2013AA.txt
