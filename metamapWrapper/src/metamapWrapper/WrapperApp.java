@@ -47,6 +47,11 @@ public class WrapperApp {
 				.required(true)
 				.desc("Is the input file with three columns including patientID, clinical narrative and disease code (for training)")
 				.build();
+		Option separator = Option.builder("sep")
+				.argName("character")
+				.hasArg()
+				.desc("Is the character that separates fields in the file. Default is comma. Other possible values are [tab, colon, semicolon]")
+				.build();
 		Option metamapData = Option.builder("mmData")
 				.argName("folderPath")
 				.hasArg()
@@ -62,10 +67,10 @@ public class WrapperApp {
 				.hasArg()
 				.desc("The name of output file in EAV format. Default is the same as input with a modifier \"_eav\"")
 				.build();
-		Option patientCol = Option.builder("patient")
+		Option encounterCol = Option.builder("encounter")
 				.argName("columnNumber")
 				.hasArg()
-				.desc("The column number where the patient ID is located. Default is 0")
+				.desc("The column number where the encounter ID is located. Default is 0")
 				.build();
 		Option narrativeCol = Option.builder("narrative")
 				.argName("columnNumber")
@@ -84,10 +89,11 @@ public class WrapperApp {
 
 		//add custom options
 		options.addOption(input);
+		options.addOption(separator);
 		options.addOption(metamapData);
 		options.addOption(metamapConfig);
 		options.addOption(output);
-		options.addOption(patientCol);
+		options.addOption(encounterCol);
 		options.addOption(narrativeCol);
 		options.addOption(diseaseCol);
 		
@@ -109,11 +115,12 @@ public class WrapperApp {
 		/*String[] semanticTypes = {"blor", "bpoc", "bsoj", "chem", "clnd", "diap", "dsyn", "fndg", "lbpr", "lbtr", "medd", 
 				"neop",	"orgm", "comd", "fngs", "bact", "sbst", "sosy", "tisu", "topp", "virs", "vita"};*/
 		String outputFile = "";
-		int patientCol = 0;
+		int encounterCol = 0;
 		int narrativeCol = 1; 
 		int diseaseCol = 2;
 		String targetName = "class";
 		String splitMarker = "-";
+		char separator = ',';
 		
 		// Parsing the command line arguments
 				CommandLineParser parser = new DefaultParser();
@@ -144,6 +151,26 @@ public class WrapperApp {
 				            //Read input filename
 				            	inputFile = line.getOptionValue("input");
 				            	System.out.println("Reading input file: " + inputFile);
+				            	
+				            	
+				            	//Read separator character
+				            	String sepCode = "comma";
+				            	if (line.hasOption("sep")) {
+				            		sepCode = line.getOptionValue("sep");
+				            		if(sepCode.equals("tab")){
+				            			separator='\t';
+				            		}
+				            		else if(sepCode.equals("tab")){
+				            			separator='\t';
+				            		}
+				            		else if(sepCode.equals("colon")){
+				            			separator=':';
+				            		}
+				            		else if(sepCode.equals("semicolon")){
+				            			separator=';';
+				            		}
+				            	}
+				            	System.out.println("Input file separator character: ´" + separator+ "´ ["+sepCode+"]");
 				            	
 				            	
 				            	//Read metamap DATA path
@@ -185,20 +212,20 @@ public class WrapperApp {
 				            	
 				            	
 				            	//Read patientCol
-				            	if (line.hasOption("patientCol")) {
-				            		patientCol = Integer.parseInt(line.getOptionValue("patientCol"));
+				            	if (line.hasOption("encounter")) {
+				            		encounterCol = Integer.parseInt(line.getOptionValue("encounter"));
 				            	}
-				            	System.out.println("Patient information in column: " + patientCol);
+				            	System.out.println("Patient information in column: " + encounterCol);
 				            	
 				            	//Read discretizeCol
-				            	if (line.hasOption("narrativeCol")) {
-				            		narrativeCol = Integer.parseInt(line.getOptionValue("narrativeCol"));
+				            	if (line.hasOption("narrative")) {
+				            		narrativeCol = Integer.parseInt(line.getOptionValue("narrative"));
 				            	}
 				            	System.out.println("Narrative information in column: " + narrativeCol);
 				            	
 				            	//Read diseaseCol
-				            	if (line.hasOption("diseaseCol")) {
-				            		diseaseCol = Integer.parseInt(line.getOptionValue("diseaseCol"));
+				            	if (line.hasOption("disease")) {
+				            		diseaseCol = Integer.parseInt(line.getOptionValue("disease"));
 				            	}
 				            	System.out.println("Disease (target) information in column: " + diseaseCol);
 				            	
@@ -207,7 +234,7 @@ public class WrapperApp {
 				            	//-------------------------------
 				            	System.out.println("\nRunning MetaMap...");
 				            	NoteTagger nt = new NoteTagger();
-				        		nt.callMetaMap(inputFile, metamapData, metamapConfig, outputFile, patientCol, narrativeCol, diseaseCol,targetName, splitMarker);
+				        		nt.callMetaMap(inputFile, separator, metamapData, metamapConfig, outputFile, encounterCol, narrativeCol, diseaseCol,targetName, splitMarker);
 				            	
 				        }
 					else {

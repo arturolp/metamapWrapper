@@ -11,7 +11,6 @@ package metamapWrapper;
  */
 
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -37,7 +36,7 @@ public class NoteTagger {
 
 	}
 
-	public void callMetaMap(String inputFile, String metamapData, String metamapConfig,
+	public void callMetaMap(String inputFile, char separator, String metamapData, String metamapConfig,
 			String eavFile, int patientIDcolumn, int clinicalNarrativeColumn, int diseaseTargetColumn,
 			String targetName, String splitMarker) {
 		// Get all tokens at once
@@ -55,7 +54,7 @@ public class NoteTagger {
 			bw.write("");
 
 			// Try to read file
-			try (CSVReader reader = new CSVReader(new BufferedReader(new FileReader(inputFile)))) {
+			try (CSVReader reader = new CSVReader(new FileReader(inputFile), separator)) {
 
 				String tokens[];
 				String umls = "Entity,Attribute,Description,SemanticType,Value\n";
@@ -64,6 +63,7 @@ public class NoteTagger {
 
 				int lineCounter = 0;
 				int totalLines = 0;
+
 				
 				while ((tokens = reader.readNext()) != null) {
 					umls = getUMLScodes(metamapData, metamapConfig, tokens[patientIDcolumn], tokens[clinicalNarrativeColumn]);
@@ -202,21 +202,19 @@ public class NoteTagger {
 		List<BioCDocument> documentList = new ArrayList<BioCDocument>();
 		documentList.add(document);
 
-
-		//Get the user-provided semantic types
-		//List<String> semanticTypesList = Arrays.asList(semanticTypes);
+		System.out.println(documentList.toString());
 
 		//Extract the codes
 		List<Entity> entityList = myMM.processDocumentList(documentList);
 		for (Entity entity: entityList) {
 			for (Ev ev: entity.getEvSet()) {
 
-				//if(semanticTypesList.contains(ev.getConceptInfo().getSemanticTypeSet().toString().replace("[", "").replace("]", ""))) {
-					//System.out.print(ev.getConceptInfo().getCUI() + "|" + entity.getMatchedText() + "|" + ev.getConceptInfo().getSemanticTypeSet());
-					//System.out.println();
-					//umls = umls + patient + "|" + ev.getConceptInfo().getCUI() + "|" + entity.getMatchedText() + "|" + ev.getConceptInfo().getSemanticTypeSet() +"\n";
-					umls = umls + patient + "," + ev.getConceptInfo().getCUI() + ","+ ev.getConceptInfo().getConceptString() + "," + ev.getConceptInfo().getSemanticTypeSet() +",T\n";
-				//}
+					umls = umls + patient + "," + 
+							ev.getConceptInfo().getCUI() + ","+ 
+							ev.getConceptInfo().getPreferredName() + "," + 
+							ev.getMatchedText() + "," +
+							ev.getConceptInfo().getSemanticTypeSet() +",T\n";
+				
 			}
 		}
 
