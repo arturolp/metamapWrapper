@@ -202,18 +202,22 @@ public class NoteTagger {
 		List<BioCDocument> documentList = new ArrayList<BioCDocument>();
 		documentList.add(document);
 
-		System.out.println(documentList.toString());
+		
 
 		//Extract the codes
 		List<Entity> entityList = myMM.processDocumentList(documentList);
 		for (Entity entity: entityList) {
+			
 			for (Ev ev: entity.getEvSet()) {
+				
+				boolean entityValue = !entity.isNegated();
 
 					umls = umls + patient + "," + 
 							ev.getConceptInfo().getCUI() + ","+ 
 							ev.getConceptInfo().getPreferredName() + "," + 
-							ev.getMatchedText() + "," +
-							ev.getConceptInfo().getSemanticTypeSet() +",T\n";
+							ev.getMatchedText() + "," + 
+							ev.getConceptInfo().getSemanticTypeSet() +"," +
+							entityValue + "\n";
 				
 			}
 		}
