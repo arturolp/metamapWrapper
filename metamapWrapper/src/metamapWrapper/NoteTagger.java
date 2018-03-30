@@ -57,7 +57,7 @@ public class NoteTagger {
 			try (CSVReader reader = new CSVReader(new FileReader(inputFile), separator)) {
 
 				String tokens[];
-				String umls = "Entity,Attribute,Description,SemanticType,Value\n";
+				String umls = "Entity\tAttribute\tDescription\tMatchedText\tSemanticType\tValue\n";
 				bw.append(umls);
 				
 
@@ -126,12 +126,12 @@ public class NoteTagger {
 			String[] parts = disease.split(splitMarker);
 			
 			for(int i = 0; i < parts.length; i++) {
-				category = category + patient + "," + targetName + i + ",,,"+ parts[i] + "\n";
+				category = category + patient + "\t" + targetName + "_" + parts[i] + "\t\t\t\t"+ "true" + "\n";
 				//System.out.print(category);
 			}
 		}
 		else {
-		category = patient + "," + targetName + ",,,"+ disease + "\n";
+		category = patient + "\t" + targetName + "_"+ disease + "\t\t\t\t"+ "true" + "\n";
 		//System.out.print(category);
 		}
 		
@@ -212,11 +212,11 @@ public class NoteTagger {
 				
 				boolean entityValue = !entity.isNegated();
 
-					umls = umls + patient + "," + 
-							ev.getConceptInfo().getCUI() + ","+ 
-							ev.getConceptInfo().getPreferredName() + "," + 
-							ev.getMatchedText() + "," + 
-							ev.getConceptInfo().getSemanticTypeSet() +"," +
+					umls = umls + patient + "\t" + 
+							ev.getConceptInfo().getCUI() + "\t"+ 
+							ev.getConceptInfo().getPreferredName() + "\t" + 
+							ev.getMatchedText() + "\t" + 
+							ev.getConceptInfo().getSemanticTypeSet() +"\t" +
 							entityValue + "\n";
 				
 			}
