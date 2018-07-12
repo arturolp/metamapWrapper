@@ -72,8 +72,10 @@ public class NoteTagger {
 					bw.append(umls);
 					
 					//Add top-level category
-					String category = getCategory(tokens[patientIDcolumn], targetName, tokens[diseaseTargetColumn], splitMarker);
-					bw.append(category);
+					if(diseaseTargetColumn != -1) {
+						String category = getCategory(tokens[patientIDcolumn], targetName, tokens[diseaseTargetColumn], splitMarker);
+						bw.append(category);
+					}
 
 					//System.out.print(umls);
 					System.out.print(".");

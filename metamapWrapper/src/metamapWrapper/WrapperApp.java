@@ -116,8 +116,8 @@ public class WrapperApp {
 				"neop",	"orgm", "comd", "fngs", "bact", "sbst", "sosy", "tisu", "topp", "virs", "vita"};*/
 		String outputFile = "";
 		int encounterCol = 0;
-		int narrativeCol = 1; 
-		int diseaseCol = 2;
+		int narrativeCol = 1;
+		int diseaseCol = -1; //initialization value to state that this is optional
 		String targetName = "class";
 		String splitMarker = "-";
 		char separator = ',';
@@ -227,7 +227,9 @@ public class WrapperApp {
 				            	if (line.hasOption("disease")) {
 				            		diseaseCol = Integer.parseInt(line.getOptionValue("disease"));
 				            	}
-				            	System.out.println("Disease (target) information in column: " + diseaseCol);
+				            	if(diseaseCol != -1) {
+				            		System.out.println("Disease (target) information in column: " + diseaseCol);
+				            	}
 				            	
 				            	//-------------------------------
 				            	//Calling MetaMap NoteTagger
